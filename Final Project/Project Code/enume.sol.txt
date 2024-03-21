@@ -1,0 +1,51 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.9;
+
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+
+contract MyToken is ERC721, ERC721Enumerable, Ownable {
+    using Counters for Counters.Counter;
+
+    uint256 public tokenIndex = 0;
+
+    uint256 MAX_MINTS = 100;
+    uint256 MAX_SUPPLY = 10021;
+    uint256 public mintRate = 0.001 ether;
+
+    string public baseURI = "ipfs://bafybeieyetlp2c2vubffzjjap7utuz5jwo2k5b5kupvezfchc5tnfg4fh4/";
+
+
+    constructor() ERC721("MyToken", "MTK") {}
+
+    function safeMint(uint256 quantity) external payable  {
+       require(totalSupply() + quantity <= MAX_SUPPLY, "Not enough tokens left");
+        require(msg.value >= (mintRate * quantity), "Not enough ether sent");
+
+        for (uint256 i = 0; i < quantity; i++){
+            _safeMint(msg.sender, tokenIndex + i);
+        }
+
+        tokenIndex = tokenIndex + quantity;
+    }
+
+    // The following functions are overrides required by Solidity.
+
+    function _beforeTokenTransfer(address from, address to, uint256 tokenId, uint256 batchSize)
+        internal
+        override(ERC721, ERC721Enumerable)
+    {
+        super._beforeTokenTransfer(from, to, tokenId, batchSize);
+    }
+
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        override(ERC721, ERC721Enumerable)
+        returns (bool)
+    {
+        return super.supportsInterface(interfaceId);
+    }
+}

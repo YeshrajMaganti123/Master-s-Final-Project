@@ -1,0 +1,15 @@
+For ERC721A
+
+For minting 1 : 100414, 66214
+
+For minting 2 : 68155
+
+For minting 10 : 83683
+
+For ERC721A Enumberable
+
+For minting 1 : 66214, 66214
+
+For minting 2 : 68155
+
+For minting 10 : 83683
